@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
+<h1>Hello </h1>
+
+<form action="/search" method="GET">
+    <fieldset>
+            
+        <label>Book Search</label>
+        <input type ="text" name = 'book_title' placeholder="Title" required>
+        <br><br>
+
+        <button type ="submit">Search</button>
+
+    </fieldset>
+</form>
+
+
+<% if (typeof result !== 'undefined') { %>
+    <% for(let i=0; i < 5; i++){ %>
+        <% if (typeof result.docs[i].isbn !== 'undefined') { %>
+            <img src = '<%= `http://covers.openlibrary.org/b/isbn/${result.docs[i].isbn[0]}-M.jpg` %>' class="cover-image">
+        <% } else { %>
+            <img src= '/images/default_cover0.jpeg'>
+        <% } %> 
+        <h3><%= result.docs[i].title%></h3><br>
+        <% if (typeof result.docs[i].author_name[0] !== 'undefined') { %>
+            <h4><%= result.docs[i].author_name[0]%></h4>
+        <% } %>
+    <% } %>
+  <% } %>
+
+  <script src="/javascripts/cover_image.js"></script>
+
+</body>
+
+</html>
