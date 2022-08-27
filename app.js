@@ -72,6 +72,18 @@ app.get('/search', (req, res) => {
     });
 })
 
+
+app.get('/book/:key', (req, res) => {
+    axios.get('https://openlibrary.org/api/books?bibkeys='+req.query.key+'&jscmd=details&format=json').then(search_res =>{
+    result = search_res.data;
+    console.log(result.docs);
+    res.render('book_details', {
+        result: result.docs,
+        key: req.params.key
+    });
+    });
+})
+
 const usersRouter = require('./routes/users')
 const authRouter = require('./routes/auth');
 app.use('/users', usersRouter)
