@@ -1,2 +1,17 @@
 <h1>Details</h1>
-<p><%= key %></p>
+
+<img
+  src="<%= `http://covers.openlibrary.org/b/isbn/${isbn}-M.jpg` %>"
+  class="cover-image"
+/>
+
+<p><%= result.title %></p>
+<p><%= author_name %></p>
+
+<% if (typeof result.description !== 'undefined') { %>
+<p><%= result.description.value %></p>
+<% } else { %>
+<p>No description available.</p>
+<% } %>
+
+<script src="/javascripts/cover_image.js"></script>

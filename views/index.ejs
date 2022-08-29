@@ -21,7 +21,7 @@
 <% if (typeof result !== 'undefined') { %>
     <% for(let i=0; i < 5; i++){ %>
         <% if (typeof result.docs[i].isbn !== 'undefined') { %>
-            <a href=<%= `book/${result.docs[i].key.split('/')[2]}`%>><img src = '<%= `http://covers.openlibrary.org/b/isbn/${result.docs[i].isbn[0]}-M.jpg` %>' 
+            <a href=<%= `book/${result.docs[i].key.split('/')[2]}/${result.docs[i].isbn[0]}`%>><img src = '<%= `http://covers.openlibrary.org/b/isbn/${result.docs[i].isbn[0]}-M.jpg` %>' 
                 class="cover-image"></a>
         <% } else { %>
             <img src= '/images/default_cover0.jpeg'>
