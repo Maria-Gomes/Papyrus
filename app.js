@@ -65,20 +65,21 @@ app.get('/test', (req, res) => {
 app.get('/search', (req, res) => {
     axios.get('http://openlibrary.org/search.json?q='+req.query.book_title).then(search_res =>{
     result = search_res.data;
-    console.log(result);
     res.render('index', {
         result: result
     });
     });
 })
 
-
 app.get('/book/:key', (req, res) => {
-    axios.get('https://openlibrary.org/api/books?bibkeys='+req.query.key+'&jscmd=details&format=json').then(search_res =>{
+    axios.get('https://openlibrary.org/api/books?bibkeys=OLID:'+req.params.key+
+    '&jscmd=data&format=json').then(search_res =>{
     result = search_res.data;
-    console.log(result.docs);
+    console.log('https://openlibrary.org/api/books?bibkeys=OLID:'+req.params.key+
+    '&jscmd=data&format=json');
+    console.log(result);
     res.render('book_details', {
-        result: result.docs,
+        result: result,
         key: req.params.key
     });
     });
