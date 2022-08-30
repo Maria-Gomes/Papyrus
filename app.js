@@ -93,8 +93,8 @@ app.get("/book/:key/:isbn", async (req, res) => {
 });
 
 const usersRouter = require("./routes/users");
-const authRouter = require("./routes/auth");
+const collectionsRouter = require("./routes/collections");
 app.use("/users", usersRouter);
-app.use("/auth", authRouter);
+app.use("/collections", collectionsRouter);
 
 app.listen(3000);
