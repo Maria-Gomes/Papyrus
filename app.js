@@ -64,15 +64,18 @@ app.get("/test", (req, res) => {
   res.render("index");
 });
 
-app.get("/search", (req, res) => {
-  axios
-    .get("http://openlibrary.org/search.json?q=" + req.query.book_title)
-    .then((search_res) => {
-      result = search_res.data;
-      res.render("index", {
-        result: result,
-      });
+app.get("/search", async (req, res) => {
+  if (req.query.book_title) {
+    search_res = await axios.get(
+      "http://openlibrary.org/search.json?q=" + req.query.book_title
+    );
+    result = search_res.data;
+    res.render("search", {
+      result: result,
     });
+  } else {
+    res.render("search", { result: undefined });
+  }
 });
 
 app.get("/book/:key/:isbn", async (req, res) => {
