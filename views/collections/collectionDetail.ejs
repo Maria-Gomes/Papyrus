@@ -1,3 +1,15 @@
 <h1>Your collections</h1>
 
-<h2><%= collection.collection_name %></h2>
+<% if (typeof collections !== 'undefined') { %>
+    <% for (let i=0; i<collections.length; i++) { %>
+    <h3><%= collections[i].collection_name%></h3><br>
+        <% for (let j=0; j<collections[i].books.length; j++) { %>
+            <h4><%= collections[i].books[j].title%></h4>
+        <% } %>
+    <% } %>
+    <a href="collections/addBook"> Add a Book to this Collection</a>
+<% } else { %>
+    <p>No collections, create one <a href="collections/new"> here </a></p>
+<% } %>
+
+<a href="collections/new"> Create a new collection </a></p>

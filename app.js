@@ -80,7 +80,6 @@ app.get("/book/:key/:isbn", async (req, res) => {
     "https://openlibrary.org/works/" + req.params.key + ".json"
   );
   result = search_res.data;
-  console.log(result);
   author = await axios.get(
     "https://openlibrary.org" + result.authors[0].author.key + ".json"
   );

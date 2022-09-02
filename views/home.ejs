@@ -1,56 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
 <h1>Home</h1>
 
 <p>Welcome <%= username %> </p>
 
-<form action="/test" method="GET">
+<a href="collections/new"> Create New Collection </a>
+
+<form action="/search" method="GET">
     <fieldset>
             
-        <label>Username</label>
+        <label>Book Search</label>
         <input type ="text" name = 'book_title' placeholder="Title" required>
         <br><br>
 
-        <button type ="submit">Search</button
+        <button type ="submit">Search</button>
 
     </fieldset>
 </form>
-<!-- <script>
-    function getBook(){
-        document.getElementById('output').innerHTML="";
-        fetch("http://openlibrary.org/search.json?q="+document.getElementById("input").value)
-        .then(a => a.json())
-        .then(response =>{
-            for(var i=0; i<5; i++){
-                document.getElementById("output").innerHTML+="<h2>"+response.docs[i].title+"</h2>"
-                +response.docs[i].author_name[0]+"<br><img src='http://covers.openlibrary.org/b/isbn/"
-                +response.docs[i].isbn[0]+"-M.jpg'><br>";
-            }
-        });
-    }
-</script>
-
-<input id="input">
-<button onclick="getBook()">Search Book</button><br>
-<div id="output"></div> -->
-
-<a href="users/logout">logout</a>
 
 
-<img src= <%= cover %>>
-<h2><%= result.title %></h2><br>
-<h3><%= result.author_name[0] %></h3><br>
-
-<% if (!result == 'undefined') {%>
-    <% for(let i=0; i < result.length; i++){%>
-        <img src = '<%= `http://covers.openlibrary.org/b/isbn/${result.docs[i].isbn[0]}-M.jpg` %>'>
+<% if (typeof result !== 'undefined') { %>
+    <% for(let i=0; i < 5; i++){ %>
+        <% if (typeof result.docs[i].isbn !== 'undefined') { %>
+            <a href=<%= `book/${result.docs[i].key.split('/')[2]}/${result.docs[i].isbn[0]}`%>><img src = '<%= `http://covers.openlibrary.org/b/isbn/${result.docs[i].isbn[0]}-M.jpg` %>' 
+                class="cover-image"></a>
+        <% } else { %>
+            <img src= '/images/default_cover0.jpeg'>
+        <% } %> 
         <h3><%= result.docs[i].title%></h3><br>
-        <h4><%= result.docs[i].author_name[i]%></h4>
-    <%} %> 
-    <%} %> 
+        <% if (typeof result.docs[i].author_name[0] !== 'undefined') { %>
+            <h4><%= result.docs[i].author_name[0]%></h4>
+        <% } %>
+    <% } %>
+  <% } %>
 
-    <% if (result.length > 0) { %>
-        <% result.forEach(function(book){ %>
-            <img src='<%= `http://covers.openlibrary.org/b/isbn/${book.isbn[0]}-M.jpg` %>'>
-            <h3><%= book.title%></h3><br>
-            <h4><%= book.author_name[0]%></h4>
-          <% }); %>
-      <% } %>
+  <script src="/javascripts/cover_image.js"></script>
+
+</body>
+
+</html>

@@ -14,4 +14,19 @@
 <p>No description available.</p>
 <% } %>
 
+<form action="/collections/addBook" method="POST">
+  <fieldset>
+    <label>Add to a Collection</label>
+    <input type="text" name="collection_name" placeholder="Name" required />
+    <input type="hidden" name="title" value="<%= result.title %>" required />
+    <input type="hidden" name="key" value="<%= result.key %>" required />
+    <input type="hidden" name="author" value="<%= author_name %>" required />
+    <input type="hidden" name="isbn" value="<%= isbn %>" />
+    <input type="hidden" name="description" value="<%= result.description.value %>" />
+    <br /><br />
+
+    <button type="submit">Submit</button>
+  </fieldset>
+</form>
+
 <script src="/javascripts/cover_image.js"></script>

@@ -6,10 +6,20 @@ const CollectionSchema = new mongoose.Schema({
     required: true,
   },
   user: {
-    type: String,
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   books: {
-    type: Array,
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+      },
+    ],
   },
 });
 
