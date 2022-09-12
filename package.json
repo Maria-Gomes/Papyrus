@@ -19,6 +19,7 @@
     "http-errors": "~1.6.3",
     "mongodb": "^4.8.0",
     "mongoose": "^6.4.6",
+    "mongoose-schema-extend": "^0.2.2",
     "morgan": "~1.9.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",

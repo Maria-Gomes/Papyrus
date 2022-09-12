@@ -13,14 +13,16 @@ const CollectionSchema = new mongoose.Schema({
       },
     ],
   },
-  books: {
-    type: [
-      {
+  books: [
+    {
+      book: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Book",
       },
-    ],
-  },
+      numberOfPagesRead: Number,
+      totalPages: Number,
+    },
+  ],
 });
 
 const bookCollection = mongoose.model("bookCollection", CollectionSchema);

@@ -1,0 +1,12 @@
+<form id="progressForm" action="/updateProgress" method="POST">
+    <fieldset>
+            
+        <label>Update Progress</label>
+        <input type ="number" name = 'pagesRead' placeholder="Page Number" required>
+        <input type ="hidden" name = 'book' value="<%= book %> " required>
+        <br><br>
+
+        <button type ="submit">Submit</button>
+
+    </fieldset>
+</form>

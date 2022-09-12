@@ -8,7 +8,8 @@ const { ensureAuthenticated } = require("../config/auth");
 router.get("/", ensureAuthenticated, async (req, res) => {
   collections = await bookCollection
     .find({ user: req.user._id })
-    .populate("books");
+    .populate("books.book");
+  console.log(collections[0].books[0]);
   res.render("collections/collectionDetail", {
     collections: collections.slice(0, 5),
   });
@@ -61,7 +62,11 @@ router.post("/addBook", ensureAuthenticated, async (req, res) => {
       return object_id === book._id;
     });
     if (!db_book) {
-      collection.books.push(book);
+      collection.books.push({
+        book: book,
+        numberOfPagesRead: 0,
+        totalPages: req.body.totalPages,
+      });
       collection.save();
       res.redirect("/collections");
     } else {
@@ -74,6 +79,10 @@ router.post("/addBook", ensureAuthenticated, async (req, res) => {
       });
     }
   }
+});
+
+router.get("/updateProgress/:book_id", (req, res) => {
+  res.render("collections/updateProgress", { book: req.params.book_id });
 });
 
 module.exports = router;
