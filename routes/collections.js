@@ -9,7 +9,6 @@ router.get("/", ensureAuthenticated, async (req, res) => {
   collections = await bookCollection
     .find({ user: req.user._id })
     .populate("books.book");
-  console.log(collections[0].books[0]);
   res.render("collections/collectionDetail", {
     collections: collections.slice(0, 5),
   });
@@ -22,7 +21,7 @@ router.get("/new", (req, res) => {
 router.post("/new", ensureAuthenticated, async (req, res) => {
   const collection_name = req.body.collection_name;
   let errors = [];
-  var collection = await bookCollection.findOne({
+  let collection = await bookCollection.findOne({
     collection_name: collection_name,
     user: req.user._id,
   });
@@ -83,6 +82,29 @@ router.post("/addBook", ensureAuthenticated, async (req, res) => {
 
 router.get("/updateProgress/:book_id", (req, res) => {
   res.render("collections/updateProgress", { book: req.params.book_id });
+});
+
+router.post("/updateProgress/saveProgress", async (req, res) => {
+  let errors = [];
+  const readingCollection = await bookCollection.findOne({
+    collection_name: "Currently Reading",
+    user: req.user._id,
+  });
+  console.log(readingCollection);
+  const book = readingCollection.books.find((book_object) => {
+    return book_object.book == req.body.book;
+  });
+  console.log(req.body.book);
+  console.log(book);
+  if (req.body.pagesRead <= book.totalPages) {
+    book.numberOfPagesRead = req.body.pagesRead;
+    readingCollection.save();
+    res.redirect("/collections");
+  } else {
+    errors.push({ msg: "Book already added to collection." });
+    res.redirect(`/collections/updateProgress/${req.body.book}`);
+  }
+  console.log(book);
 });
 
 module.exports = router;

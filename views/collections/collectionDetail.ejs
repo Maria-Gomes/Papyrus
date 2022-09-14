@@ -7,7 +7,8 @@
             <h4><%= collections[i].books[j].book.title%></h4>
             <p><%= collections[i].books[j].book.description%></p>
             <% if (collections[i].collection_name == 'Currently Reading') { %>
-                <a href=<%= `collections/updateProgress/${collections[i].books[j].book._id}`%>>Update Your Reading Progress</a>
+                <p>Pages Read: <%= `${collections[i].books[j].numberOfPagesRead}/${collections[i].books[j].totalPages}` %> </p>
+                <a href=<%= `updateProgress/${collections[i].books[j].book._id}`%>>Update Your Reading Progress</a>
             <% } %>
         <% } %>
     <% } %>
