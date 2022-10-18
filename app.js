@@ -7,7 +7,11 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const dotenv = require("dotenv");
 const axios = require("axios");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const User = require("./models/userModel");
 
@@ -29,12 +33,23 @@ app.use(express.urlencoded({ extended: false }));
 //app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
-  session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
   })
 );
+
+app.use(
+  session({
+    secret: "secret",
+    cookie: { httpOnly: false },
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+);
+
+app.use(cookieParser(["secret"]));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -50,14 +65,13 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.render("users/login");
+app.get("/login", (req, res) => {
+  res.json({ message: "Welcome to Papyrus..." });
 });
 
 app.get("/home", ensureAuthenticated, (req, res) => {
-  res.render("home", {
-    username: req.user.username,
-  });
+  res.json({ username: req.user.username });
+  console.log(req.user);
 });
 
 app.get("/test", (req, res) => {
@@ -99,4 +113,4 @@ const collectionsRouter = require("./routes/collections");
 app.use("/users", usersRouter);
 app.use("/collections", collectionsRouter);
 
-app.listen(3000);
+app.listen(3001);

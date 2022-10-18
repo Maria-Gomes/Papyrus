@@ -47,8 +47,8 @@ router.post("/register", (req, res) => {
                   });
                   collection.save();
                 }
-                req.flash("success_msg", "You are now registered.");
-                res.redirect("/");
+                console.log(newUser);
+                res.json({ message: "Registered Successfully!" });
               })
               .catch((err) => console.log(err));
           })
@@ -63,10 +63,16 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", (req, res, next) => {
-  passport.authenticate("local", {
-    successRedirect: "/home",
-    failureRedirect: "/",
-    failureFlash: true,
+  passport.authenticate("local", (err, user, info) => {
+    if (err) throw err;
+    if (!user) res.send("User does not exist.");
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        res.send("Successfully authenticated.");
+        console.log(req.user);
+      });
+    }
   })(req, res, next);
 });
 
@@ -78,6 +84,21 @@ router.get("/logout", (req, res) => {
     req.flash({ success_msg: "Logged out successfully" });
     res.redirect("/");
   });
+});
+
+router.delete("/logout", (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(400).send("Cannot log out");
+      } else {
+        res.clearCookie("connect.sid");
+        res.send("Logout successful");
+      }
+    });
+  } else {
+    res.send("Unsuccessful");
+  }
 });
 
 module.exports = router;
