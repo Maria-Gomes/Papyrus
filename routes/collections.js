@@ -9,7 +9,7 @@ router.get("/", ensureAuthenticated, async (req, res) => {
   collections = await bookCollection
     .find({ user: req.user._id })
     .populate("books.book");
-  res.render("collections/collectionDetail", {
+  res.send({
     collections: collections.slice(0, 5),
   });
 });

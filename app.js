@@ -42,7 +42,7 @@ app.use(
 app.use(
   session({
     secret: "secret",
-    cookie: { httpOnly: false },
+    cookie: { httpOnly: true, maxAge: 1200000 },
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),

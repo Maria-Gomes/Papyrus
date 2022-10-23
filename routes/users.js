@@ -64,11 +64,11 @@ router.get("/login", (req, res) => {
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
-    if (err) throw err;
+    if (err) res.send(err);
     if (!user) res.send("User does not exist.");
     else {
       req.logIn(user, (err) => {
-        if (err) throw err;
+        if (err) res.send(err);
         res.send("Successfully authenticated.");
         console.log(req.user);
       });
