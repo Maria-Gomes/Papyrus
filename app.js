@@ -9,7 +9,12 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const dotenv = require("dotenv");
-const axios = require("axios");
+const https = require("https");
+const axiosDefault = require("axios");
+const axios = axiosDefault.create({
+  timeout: 8000000,
+  httpsAgent: new https.Agent({ keepAlive: true }),
+});
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -42,7 +47,7 @@ app.use(
 app.use(
   session({
     secret: "secret",
-    cookie: { httpOnly: true, maxAge: 1200000 },
+    cookie: { httpOnly: true, maxAge: 8000000 },
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
@@ -80,31 +85,27 @@ app.get("/test", (req, res) => {
 
 app.get("/search", async (req, res) => {
   if (req.query.book_title) {
-    search_res = await axios.get(
-      "http://openlibrary.org/search.json?q=" + req.query.book_title
-    );
+    search_res = await axios
+      .get("http://openlibrary.org/search.json?q=" + req.query.book_title)
+      .catch((err) => console.log(err));
     result = search_res.data;
-    res.render("search", {
-      result: result,
-    });
+    res.json(result);
   } else {
     res.render("search", { result: undefined });
   }
 });
 
-app.get("/book/:key/:isbn", async (req, res) => {
+app.get("/book/:key", async (req, res) => {
   search_res = await axios.get(
     "https://openlibrary.org/works/" + req.params.key + ".json"
   );
   result = search_res.data;
-  author = await axios.get(
-    "https://openlibrary.org" + result.authors[0].author.key + ".json"
-  );
-  res.render("book_details", {
-    result: result,
-    key: req.params.key,
-    author_name: author.data.name,
-    isbn: req.params.isbn,
+  // author = await axios.get(
+  //   "https://openlibrary.org" + result.authors[0].author.key + ".json"
+  // );
+  console.log(result);
+  res.json({
+    bookDetails: result,
   });
 });
 

@@ -1,7 +1,7 @@
 <h1>Details</h1>
 
 <img
-  src="<%= `http://covers.openlibrary.org/b/isbn/${isbn}-M.jpg` %>"
+  src="<%= isbn %>"
   class="cover-image"
 />
 
@@ -23,7 +23,7 @@
     <input type="hidden" name="key" value="<%= result.key %>" required />
     <input type="hidden" name="author" value="<%= author_name %>" required />
     <input type="hidden" name="isbn" value="<%= isbn %>" />
-    <input type="hidden" name="description" value="<%= result.description.value || 'No description available' %>" />
+    <input type="hidden" name="description" value="<%= result.description || 'No description available' %>" />
     <br /><br />
 
     <button type="submit">Submit</button>
