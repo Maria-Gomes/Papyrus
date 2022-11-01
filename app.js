@@ -95,18 +95,13 @@ app.get("/search", async (req, res) => {
   }
 });
 
-app.get("/book/:key", async (req, res) => {
+app.get("/book/:key/:author/:isbn", async (req, res) => {
   search_res = await axios.get(
     "https://openlibrary.org/works/" + req.params.key + ".json"
   );
   result = search_res.data;
-  // author = await axios.get(
-  //   "https://openlibrary.org" + result.authors[0].author.key + ".json"
-  // );
   console.log(result);
-  res.json({
-    bookDetails: result,
-  });
+  res.json(result);
 });
 
 const usersRouter = require("./routes/users");
