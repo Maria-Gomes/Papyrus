@@ -26,14 +26,14 @@ router.post("/new", ensureAuthenticated, async (req, res) => {
     user: req.user._id,
   });
   if (collection) {
-    errors.push({ msg: "Collection already exists" });
+    errors.push({ error_msg: "Collection already exists" });
     console.log("Collection exists");
-    res.render("collections/createCollection", { errors, collection_name });
+    res.send({ error_msg: "Collection already exists" });
   } else {
     collection = new bookCollection({ collection_name, user: req.user._id });
     collection.save();
     console.log(collection);
-    res.redirect("/collections");
+    res.send({ success_msg: "Created collection." });
   }
 });
 
@@ -55,7 +55,8 @@ router.post("/addBook", ensureAuthenticated, async (req, res) => {
         author: req.body.author,
         description: req.body.description,
       });
-      book.save();
+      book.save(); //add catch here
+      console.log(book);
     }
     db_book = collection.books.find((object_id) => {
       return object_id === book._id;
@@ -67,15 +68,11 @@ router.post("/addBook", ensureAuthenticated, async (req, res) => {
         totalPages: req.body.totalPages,
       });
       collection.save();
-      res.redirect("/collections");
+      console.log(collection);
+      res.send({ success_msg: "Added book to collection" });
     } else {
       errors.push({ msg: "Book already added to collection." });
-      res.render("book_details", {
-        errors,
-        result: req.body.book,
-        isbn: req.body.isbn,
-        author: req.body.author,
-      });
+      res.send({ error_msg: "Could not add book." });
     }
   }
 });
@@ -84,7 +81,7 @@ router.get("/updateProgress/:book_id", (req, res) => {
   res.render("collections/updateProgress", { book: req.params.book_id });
 });
 
-router.post("/updateProgress/saveProgress", async (req, res) => {
+router.post("/updateProgress", async (req, res) => {
   let errors = [];
   const readingCollection = await bookCollection.findOne({
     collection_name: "Currently Reading",
@@ -92,17 +89,16 @@ router.post("/updateProgress/saveProgress", async (req, res) => {
   });
   console.log(readingCollection);
   const book = readingCollection.books.find((book_object) => {
-    return book_object.book == req.body.book;
+    return book_object.book == req.body.book.book_id;
   });
-  console.log(req.body.book);
+  console.log(req.body.book.book_id);
   console.log(book);
   if (req.body.pagesRead <= book.totalPages) {
     book.numberOfPagesRead = req.body.pagesRead;
     readingCollection.save();
-    res.redirect("/collections");
+    res.send({ success_msg: "Progress updated." });
   } else {
-    errors.push({ msg: "Book already added to collection." });
-    res.redirect(`/collections/updateProgress/${req.body.book}`);
+    res.send({ error_msg: "Pages read exceeds total pages." });
   }
   console.log(book);
 });
