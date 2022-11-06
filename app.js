@@ -76,11 +76,6 @@ app.get("/login", (req, res) => {
 
 app.get("/home", ensureAuthenticated, (req, res) => {
   res.json({ username: req.user.username });
-  console.log(req.user);
-});
-
-app.get("/test", (req, res) => {
-  res.render("index");
 });
 
 app.get("/search", async (req, res) => {
@@ -91,16 +86,15 @@ app.get("/search", async (req, res) => {
     result = search_res.data;
     res.json(result);
   } else {
-    res.render("search", { result: undefined });
+    res.json({ error_msg: "No results found." });
   }
 });
 
-app.get("/book/:key/:author/:isbn", async (req, res) => {
+app.get("/book/:key", async (req, res) => {
   search_res = await axios.get(
     "https://openlibrary.org/works/" + req.params.key + ".json"
   );
   result = search_res.data;
-  console.log(result);
   res.json(result);
 });
 
